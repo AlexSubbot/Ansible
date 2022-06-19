@@ -1,32 +1,42 @@
 ---
 - name: Conf build serv and artefact
-  hosts: Build_serv
-  become: True
+  hosts: deploy
+  become: yes
+
   tasks:
-    - name: install git
-      apt:
-        name: git
-        update_cache: yes
-        state: present
-    - name: install java
-      apt:
-        name: default-jdk
-        state: present
-    - name: install maven
-      apt:
-        name: maven
-        state: present
-    - name: clone git repo
-      git:
-        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
-        dest: /tmp/webapp
-    - name: build app
-      shell:
+  - name: install git
+    apt:
+      name: git
+      update_cache: yes
+      state: present
+  - name: install java
+    apt:
+      name: default-jdk
+      state: present
+  - name: install maven
+    apt:
+      name: maven
+      state: present
+  - name: clone git repo
+    git:
+      repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
+      dest: /tmp/webapp
+  - name: build app
+    shell:
+      cmd: mvn package
+      chdir: /tmp/webapp/
+
+  - name: copy webapp
+    synchronize:
+      mode: pull
+      src: /tmp/webapp/target/hello-1.0.war
+      dest: /tmp/webapp/hello-1.0.war
+      delegate_to: prod
 
 
 
-    - name: install tomcat9
-      apt:
-        name: tomcat9
-        state: present
+  #  - name: install tomcat9
+   #   apt:
+    #    name: tomcat9
+     #   state: present
 
