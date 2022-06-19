@@ -31,7 +31,7 @@
       mode: pull
       src: /tmp/webapp/target/hello-1.0.war
       dest: /tmp/webapp/hello-1.0.war
-      delegate_to: prod.host
+      delegate_to: {{prod}}
 
 
 
